@@ -109,18 +109,24 @@ border-radius: 10px;
     'KEY', 'NOT', 'MIN', 'MAX', 'AVG', 'ON', 'OR', 'ORDER', 'PRIMARY', 'UPDATE',
      'UNION', 'VALUES', 'WHEN', 'WHERE'
   ]
-
+// input is whatever value we write inside the main textbox
+//selection is the variable that gives the div the dropdown
   input=document.getElementById('myInput');
   selection=document.getElementById('myInputautocomplete-list');
+  // start and end are variables for each word as in INSERT in "insert into table...."
   var start=0,end=0;
+  // current variable is used for moving up and down the dropdown list
   current=0;
+  // drop-down list length
   selectionLength=0;
 
   function handleKeyPress(event)
   {
+    // function for keyboard functionality
+
+    //going down the list
     if(event.keyCode==40)
     {
-   //   console.log(current);
       selection.children[current].style.backgroundColor='white';
       current=(current+1)%(selectionLength);
       selection.children[current].style.backgroundColor='#dbbaca';
@@ -149,7 +155,8 @@ border-radius: 10px;
   }
 
   function inputChange(event) {
-  //  console.log(event);
+  //  finds the cordinates of the cursor and initialize it to x and y and 
+  //   positions the dropdown box
     x=getCursorXY(input,event.target.selectionStart).x;
     y=getCursorXY(input,event.target.selectionStart).y;
     selection.style.position='absolute';
@@ -159,6 +166,8 @@ border-radius: 10px;
     input=document.getElementById('myInput');
     if (event.target.value.length > 0) {
       end=input.value.length;
+
+      // for solving backspace issue
       if(input.value.length<start)
       {
         start-=2;
@@ -172,6 +181,8 @@ border-radius: 10px;
         }
         start++;
       }
+
+      //setting start and end after each word
       if(input.value[end-1]==' ' || input.value[end-1]=='\n')
       {
         start=end;
@@ -196,12 +207,7 @@ border-radius: 10px;
   }
   function get(url, entered, callback) {
     document.getElementById("myInputautocomplete-list").innerHTML = "";
-    // var xmlhttp = new XMLHttpRequest();
-    // xmlhttp.onreadystatechange = function () {
-    //   if (this.readyState == 4) {
-      // console.log(entered.substring(0,start));
-      // console.log(this.responseText);
-       
+ 
         matching=[];
         for(i=0;i<keywords.length;i++)
         {
@@ -212,17 +218,9 @@ border-radius: 10px;
           }
         
       }
-      // console.log(matching);
+    
        callback(matching,entered.substring(start,end));
-        //callback(this.responseText,entered);
-    //   }
-    // };
-    // xmlhttp.open("GET", url + entered.substring(start,end), true);
-    // xmlhttp.setRequestHeader(
-    //   "Content-type",
-    //   "application/x-www-form-urlencoded"
-    // );
-    // xmlhttp.send();
+    
   }
   function selectSuggestion(event){
     newInput=input.value.substring(0,start)+event.target.innerHTML;
