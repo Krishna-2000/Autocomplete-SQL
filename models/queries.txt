@@ -1,0 +1,20 @@
+ var q_strings = [
+        { qname: 'select () from () where ()'},
+        { qname: 'select () from () where () order by () ASC'},
+        { qname: 'select () from () where () order by () DESC'},
+        { qname: 'select * from ^},
+        { qname: 'insert into () values (a,b)'},
+        { qname: 'select AVG() from () where ()'},
+        { qname: 'select MAX() as () from ()'},
+        { qname: 'select MIN() as () from ()'},
+        { qname: 'select count(*) from ()'},
+        { qname: 'select count() from ()'},
+        { qname: 'select () as () from () group by ()'},
+        { qname: 'select () from () where () group by ()'},
+        { qname: 'select () from () where () group by () having ()'},
+        { qname: 'select () from () where () in ()'},
+        { qname: 'select distinct () from () where not exists ()'},
+        { qname: 'select distinct () from () where exists ()'},
+        { qname: 'delete from () where ()'},
+        { qname: 'update () set () where ()'}
+    ];
