@@ -1,268 +1,302 @@
 <style>
      
-      body {
-        font: 16px Arial;
-      }
+  body {
+    font: 16px Arial;
+  }
 
-      .autocomplete {
-        position: relative;
-        display: inline-block;
-      }
+  .autocomplete {
+    position: relative;
+    display: inline-block;
+  }
 
-     
+ 
 
-      button {
-        background-color: DodgerBlue;
-        color: #fff;
-        cursor: pointer;
-        position: relative;
-        left: 10px;
-      }
-
-      .autocomplete-items {
-        border: 1px solid #d4d4d4;
-        border-bottom: none;
-        border-top: none;
-      }
-
-      .autocomplete-items div {
-        padding: 10px;
-        cursor: pointer;
-        background-color: #fff;
-        border-bottom: 1px solid #d4d4d4;
-      }
-
-      .autocomplete-items div:hover {
-        background-color: #e9e9e9;
-      }
-
-      .autocomplete-active {
-        background-color: DodgerBlue !important;
-        color: #ffffff;
-      }
-    
-  
-      .btn-hover {
-    width: 200px;
-    font-size: 16px;
-    font-weight: 600;
+  button {
+    background-color: DodgerBlue;
     color: #fff;
     cursor: pointer;
-    margin: 20px;
-    height: 55px;
-    text-align:center;
-    border: none;
-    background-size: 300% 100%;
-    background-color: #660033;
-    border-radius: 10px;
-    
+    position: relative;
+    left: 10px;
+  }
+
+  .autocomplete-items {
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+  }
+
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  .autocomplete-items div:hover {
+    background-color: #e9e9e9;
+  }
+
+  .autocomplete-active {
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+  }
+
+
+  .btn-hover {
+width: 200px;
+font-size: 16px;
+font-weight: 600;
+color: #fff;
+cursor: pointer;
+margin: 20px;
+height: 55px;
+text-align:center;
+border: none;
+background-size: 300% 100%;
+background-color: #660033;
+border-radius: 10px;
+
 }
-    </style>
+</style>
 <!DOCTYPE html>
 <html >
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-  </head>
-  <body>
-    <div style="background: #660033;height:100px;color: white;" >
-    <h2 style="position: relative;top: 25px;left: 700px;font-size: 40px;">SQL EDITOR</h2>
-  </div>
-  <br>
-   <p><div style="padding-left: 200px;font-size: 30px;"><b>START CODING IN SQL</b></div> </p>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+</head>
+<body>
+<div style="background: #660033;height:100px;color: white;" >
+<h2 style="position: relative;top: 25px;left: 700px;font-size: 40px;">SQL EDITOR</h2>
+</div>
 <br>
-    <form autocomplete="off">
-      
-      <br>
-      
-      <div style="padding-left: 170px;">
-        <button style="padding: 10px;" class="btn-hover" onClick="alert('Submitted!!')">
-          Submit Query
-        </button>
-        <button class="btn-hover" type="reset" onClick="func();">
-          RESET
-        </button>
-      </div>
-      <br><br>
-      <div class="autocomplete" style="padding-left: 200px;">
-        <textarea
-          rows="6"
-          cols="100"
-          id="myInput"
-          type="text"
-          name="mySQL"
-          placeholder="Enter SQL command here.."
-          onInput="inputChange(event)"
-          onkeydown="handleSelection(event)"
-        ></textarea>
-        
-      </div>
-    </form>
-    <div id="myInputautocomplete-list" class="autocomplete-items"></div>
-  </body>
+<p><div style="padding-left: 200px;font-size: 30px;"><b>START CODING IN SQL</b></div> </p>
+<br>
+<form autocomplete="off">
+  
+  <br>
+  
+  <div style="padding-left: 170px;">
+    <button style="padding: 10px;" class="btn-hover" onClick="alert('Submitted!!')">
+      Submit Query
+    </button>
+    <button class="btn-hover" type="reset" onClick="func();">
+      RESET
+    </button>
+  </div>
+  <br><br>
+  <div class="autocomplete" style="padding-left: 200px;">
+    <textarea
+      rows="6"
+      cols="100"
+      id="myInput"
+      type="text"
+      name="mySQL"
+      placeholder="Enter SQL command here.."
+      onInput="inputChange(event)"
+      onkeydown="handleKeyPress(event)"
+    ></textarea>
+    
+  </div>
+</form>
+<div id="myInputautocomplete-list" class="autocomplete-items"></div>
+</body>
 
-    <script>
-      input=document.getElementById('myInput');
-      selection=document.getElementById('myInputautocomplete-list');
-      var start=0,end=0;
-      current=0;
-      selectionLength=0;
+<script>
 
-      function handleSelection(event)
+  keywords = [
+    'AS', 'AND', 'ASC', 'BY', 'CASE', 'COUNT', 'DROP', 'DELETE', 'DISTINCT', 
+    'ELSE', 'EXISTS', 'FROM', 'GROUP', 'HAVING', 'INSERT', 'IF', 'INTO', 'JOIN',
+    'KEY', 'NOT', 'MIN', 'MAX', 'AVG', 'ON', 'OR', 'ORDER', 'PRIMARY', 'UPDATE',
+     'UNION', 'VALUES', 'WHEN', 'WHERE'
+  ]
+
+  input=document.getElementById('myInput');
+  selection=document.getElementById('myInputautocomplete-list');
+  var start=0,end=0;
+  current=0;
+  selectionLength=0;
+
+  function handleKeyPress(event)
+  {
+    if(event.keyCode==40)
+    {
+   //   console.log(current);
+      selection.children[current].style.backgroundColor='white';
+      current=(current+1)%(selectionLength);
+      selection.children[current].style.backgroundColor='#dbbaca';
+    }
+    else if(event.keyCode==38)
+    {
+      if(selection.children.length!=0)
       {
-        if(event.keyCode==40)
-        {
-          console.log(current);
-          selection.children[current].style.backgroundColor='white';
-          current=(current+1)%(selectionLength);
-          selection.children[current].style.backgroundColor='#dbbaca';
-        }
-        else if(event.keyCode==38)
-        {
-          if(selection.children.length!=0)
-          {
-            event.preventDefault();
-          }
-          console.log(current);
-          selection.children[current].style.backgroundColor='white';
-            current=(current+selectionLength-1)%(selectionLength);
-          
-          selection.children[current].style.backgroundColor='#dbbaca';
-        }
-        else if(event.keyCode==13)
-        {
-          if(selection.children.length!=0)
-          {
-            event.preventDefault();
-          }
-          else
-          {
-            selection.innerHTML="";
-          }
-          selection.children[current].click();
-        }
+        event.preventDefault();
       }
-
-      function inputChange(event) {
-        console.log(event);
-        x=getCursorXY(input,event.target.selectionStart).x;
-        y=getCursorXY(input,event.target.selectionStart).y;
-        selection.style.position='absolute';
-        selection.style.left=x
-        selection.style.top=y-100
-        current=0;
-        input=document.getElementById('myInput');
-        if (event.target.value.length > 0) {
-          end=input.value.length;
-          if(input.value[end-1]==' ' || input.value[end-1]=='\n')
-          {
-            start=end;
-            document.getElementById('myInputautocomplete-list').innerHTML="";
-          }
-          if(input.value[end-1]!=' ')
-          {
-          get('http://localhost:9000/queries/query?q=',input.value,handle);
-          }
-        } else {
-          document.getElementById("myInputautocomplete-list").innerHTML = "";
-        }
-      }
-
-     
+     // console.log(current);
+      selection.children[current].style.backgroundColor='white';
+        current=(current+selectionLength-1)%(selectionLength);
       
-      function func(){
-        location.reload();
+      selection.children[current].style.backgroundColor='#dbbaca';
+    }
+    else if(event.keyCode==13)
+    {
+      if(selection.children.length!=0)
+      {
+        event.preventDefault();
+        selection.children[current].click();
       }
-      function get(url, entered, callback) {
-        document.getElementById("myInputautocomplete-list").innerHTML = "";
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-          if (this.readyState == 4) {
-          // console.log(entered.substring(0,start));
-       //    console.log(this.responseText);
-            callback(this.responseText,entered);
+      
+    }
+  }
+
+  function inputChange(event) {
+  //  console.log(event);
+    x=getCursorXY(input,event.target.selectionStart).x;
+    y=getCursorXY(input,event.target.selectionStart).y;
+    selection.style.position='absolute';
+    selection.style.left=x
+    selection.style.top=y-100
+    current=0;
+    input=document.getElementById('myInput');
+    if (event.target.value.length > 0) {
+      end=input.value.length;
+      if(input.value.length<start)
+      {
+        start-=2;
+        while(input.value[start]!=' ' && input.value[start]!='\n')
+        {
+          start--;
+          if(start==-1)
+          {
+            break;
           }
-        };
-        xmlhttp.open("GET", url + entered.substring(start,end), true);
-        xmlhttp.setRequestHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-        );
-        xmlhttp.send();
+        }
+        start++;
       }
-      function selectSuggestion(event){
-        newInput=input.value.substring(0,start)+event.target.innerHTML;
-        input.value = newInput;
-        selection.innerHTML = "";
-        input.focus();
-      }
-      function handle(data,str) {
-       // console.log(str);
-        myObj = JSON.parse(data).matching;
-        var s1 = str.substring(0,start);
-        selectionLength=myObj.length;
+      if(input.value[end-1]==' ' || input.value[end-1]=='\n')
+      {
+        start=end;
+        selection.innerHTML="";
         
-        for (var i = 0; i < myObj.length; i++) {
-
-          var node = document.createElement("div");
-         
-          node.setAttribute(
-            "onClick","selectSuggestion(event)"
-          );
-          var val = document.createTextNode(myObj[i]);
-         
-          node.appendChild(val);
-
-          document.getElementById("myInputautocomplete-list").appendChild(node);
-          selection.children[current].style.backgroundColor="white";
-          selection.children[0].style.backgroundColor="#dbbaca";
-        }
       }
-
-      const getCursorXY = (input, selectionPoint) => {
-        const {
-          offsetLeft: inputX,
-          offsetTop: inputY,
-        } = input
-        // create a dummy element that will be a clone of our input
-        const div = document.createElement('div')
-        // get the computed style of the input and clone it onto the dummy element
-        const copyStyle = getComputedStyle(input)
-        for (const prop of copyStyle) {
-          div.style[prop] = copyStyle[prop]
-        }
-        // we need a character that will replace whitespace when filling our dummy element if it's a single line <input/>
-        const swap = '.'
-        const inputValue = input.tagName === 'INPUT' ? input.value.replace(/ /g, swap) : input.value
-        // set the div content to that of the textarea up until selection
-        const textContent = inputValue.substr(0, selectionPoint)
-        // set the text content of the dummy element div
-        div.textContent = textContent
-        if (input.tagName === 'TEXTAREA') div.style.height = 'auto'
-        // if a single line input then the div needs to be single line and not break out like a text area
-        if (input.tagName === 'INPUT') div.style.width = 'auto'
-        // create a marker element to obtain caret position
-        const span = document.createElement('span')
-        // give the span the textContent of remaining content so that the recreated dummy element is as close as possible
-        span.textContent = inputValue.substr(selectionPoint) || '.'
-        // append the span marker to the div
-        div.appendChild(span)
-        // append the dummy element to the body
-        document.body.appendChild(div)
-        // get the marker position, this is the caret position top and left relative to the input
-        const { offsetLeft: spanX, offsetTop: spanY } = span
-        // lastly, remove that dummy element
-        // NOTE:: can comment this out for debugging purposes if you want to see where that span is rendered
-        document.body.removeChild(div)
-        // return an object with the x and y of the caret. account for input positioning so that you don't need to wrap the input
-        return {
-          x: inputX + spanX,
-          y: inputY + spanY,
-        }
+      else
+      {
+      get('http://localhost:9000/queries/query?q=',input.value,handle);
       }
+    } else {
+      document.getElementById("myInputautocomplete-list").innerHTML = "";
+    }
+    console.log(start,end);
 
-      document.addEventListener('click',()=>{selection.innerHTML="";})
+  }
 
-    </script>
-  </body>
+ 
+  
+  function func(){
+    location.reload();
+  }
+  function get(url, entered, callback) {
+    document.getElementById("myInputautocomplete-list").innerHTML = "";
+    // var xmlhttp = new XMLHttpRequest();
+    // xmlhttp.onreadystatechange = function () {
+    //   if (this.readyState == 4) {
+      // console.log(entered.substring(0,start));
+      // console.log(this.responseText);
+       
+        matching=[];
+        for(i=0;i<keywords.length;i++)
+        {
+          
+          if(keywords[i].indexOf(entered.substring(start,end).toUpperCase())==0)
+          {
+            matching.push(keywords[i]);
+          }
+        
+      }
+      // console.log(matching);
+       callback(matching,entered.substring(start,end));
+        //callback(this.responseText,entered);
+    //   }
+    // };
+    // xmlhttp.open("GET", url + entered.substring(start,end), true);
+    // xmlhttp.setRequestHeader(
+    //   "Content-type",
+    //   "application/x-www-form-urlencoded"
+    // );
+    // xmlhttp.send();
+  }
+  function selectSuggestion(event){
+    newInput=input.value.substring(0,start)+event.target.innerHTML;
+    input.value = newInput;
+    selection.innerHTML = "";
+    input.focus();
+  }
+  function handle(data,str) {
+   // console.log(data);
+    myObj = data;
+    var s1 = str.substring(0,start);
+    selectionLength=myObj.length;
+    
+    for (var i = 0; i < myObj.length; i++) {
+
+      var node = document.createElement("div");
+     
+      node.setAttribute(
+        "onClick","selectSuggestion(event)"
+      );
+      var val = document.createTextNode(myObj[i]);
+     
+      node.appendChild(val);
+
+      document.getElementById("myInputautocomplete-list").appendChild(node);
+      selection.children[current].style.backgroundColor="white";
+      selection.children[0].style.backgroundColor="#dbbaca";
+    }
+  }
+
+  const getCursorXY = (input, selectionPoint) => {
+    const {
+      offsetLeft: inputX,
+      offsetTop: inputY,
+    } = input
+    // create a dummy element that will be a clone of our input
+    const div = document.createElement('div')
+    // get the computed style of the input and clone it onto the dummy element
+    const copyStyle = getComputedStyle(input)
+    for (const prop of copyStyle) {
+      div.style[prop] = copyStyle[prop]
+    }
+    // we need a character that will replace whitespace when filling our dummy element if it's a single line <input/>
+    const swap = '.'
+    const inputValue = input.tagName === 'INPUT' ? input.value.replace(/ /g, swap) : input.value
+    // set the div content to that of the textarea up until selection
+    const textContent = inputValue.substr(0, selectionPoint)
+    // set the text content of the dummy element div
+    div.textContent = textContent
+    if (input.tagName === 'TEXTAREA') div.style.height = 'auto'
+    // if a single line input then the div needs to be single line and not break out like a text area
+    if (input.tagName === 'INPUT') div.style.width = 'auto'
+    // create a marker element to obtain caret position
+    const span = document.createElement('span')
+    // give the span the textContent of remaining content so that the recreated dummy element is as close as possible
+    span.textContent = inputValue.substr(selectionPoint) || '.'
+    // append the span marker to the div
+    div.appendChild(span)
+    // append the dummy element to the body
+    document.body.appendChild(div)
+    // get the marker position, this is the caret position top and left relative to the input
+    const { offsetLeft: spanX, offsetTop: spanY } = span
+    // lastly, remove that dummy element
+    // NOTE:: can comment this out for debugging purposes if you want to see where that span is rendered
+    document.body.removeChild(div)
+    // return an object with the x and y of the caret. account for input positioning so that you don't need to wrap the input
+    return {
+      x: inputX + spanX,
+      y: inputY + spanY,
+    }
+  }
+
+  document.addEventListener('click',()=>{selection.innerHTML="";})
+
+</script>
+</body>
 </html>
